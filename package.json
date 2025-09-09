@@ -1,0 +1,42 @@
+{
+  "dependencies": {
+    "axios": "^1.11.0",
+    "child_process": "^1.0.2",
+    "cloudinary": "^2.7.0",
+    "dotenv": "^17.2.2",
+    "fs": "^0.0.1-security",
+    "https": "^1.0.0",
+    "module-alias": "^2.2.3",
+    "mysql2": "^3.14.5",
+    "path": "^0.12.7",
+    "puppeteer": "^24.19.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "sequelize": "^6.37.7"
+  },
+  "scripts": {
+    "dev": "node ./index.js",
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "db:migrate:schema:timestamps:add": "npx sequelize-cli db:migrate:schema:timestamps:add",
+    "db:migrate:status": "npx sequelize-cli db:migrate:status",
+    "db:migrate:undo": "npx sequelize-cli db:migrate:undo",
+    "db:migrate:undo:all": "npx sequelize-cli db:migrate:undo:all",
+    "db:seed": "npx sequelize-cli db:seed",
+    "db:seed:all": "npx sequelize-cli db:seed:all",
+    "db:seed:undo": "npx sequelize-cli db:seed:undo",
+    "db:seed:undo:all": "npx sequelize-cli db:seed:undo:all",
+    "db:create": "npx sequelize-cli db:create",
+    "db:drop": "npx sequelize-cli db:drop",
+    "init": "npx sequelize-cli init",
+    "init:config": "npx sequelize-cli init:config",
+    "init:migrations": "npx sequelize-cli init:migrations",
+    "init:models": "npx sequelize-cli init:models",
+    "init:seeders": "npx sequelize-cli init:seeders",
+    "migration:generate": "npx sequelize-cli migration:generate",
+    "migration:create": "npx sequelize-cli migration:create",
+    "model:generate": "npx sequelize-cli model:generate",
+    "model:create": "npx sequelize-cli model:create",
+    "seed:generate": "npx sequelize-cli seed:generate",
+    "seed:create": "npx sequelize-cli seed:create"
+  }
+}
