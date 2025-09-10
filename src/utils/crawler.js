@@ -150,25 +150,30 @@ async function crawlTikTokVideoLinks() {
       newTags.forEach((t) => tagSet.add(t));
 
       const musicInfo = dataResp?.music_info || {};
+      const tiktokId = extractTiktokIdFromUrl(item.url);
 
-      enrichedData.push({
-        ...item,
-        tiktokId: extractTiktokIdFromUrl(item.url),
-        description: extractDescription(item.rawAlt),
-        title: extractDescription(item.rawAlt),
-        topics: topic ? [topic] : [],
-        tags: newTags,
-        music: {
+      if (tiktokId && !enrichedData.some((m) => m.tiktokId === tiktokId)) {
+        enrichedData.push({
+          ...item,
+          tiktokId: tiktokId,
+          description: extractDescription(item.rawAlt),
+          title: extractDescription(item.rawAlt),
+          topics: topic ? [topic] : [],
+          tags: newTags,
+          music: {
+            ...(item.music || {}),
+            thumbnail: musicInfo.cover || item.thumbnail || null,
+            tiktokId: musicInfo.id || null,
+          },
+        });
+      }
+      if (musicInfo.id && !musicData.some((m) => m.tiktokId === musicInfo.id)) {
+        musicData.push({
           ...(item.music || {}),
           thumbnail: musicInfo.cover || item.thumbnail || null,
-          tiktokId: musicInfo.id || null,
-        },
-      });
-      musicData.push({
-        ...(item.music || {}),
-        thumbnail: musicInfo.cover || item.thumbnail || null,
-        tiktokId: musicInfo.id || null,
-      });
+          tiktokId: musicInfo.id,
+        });
+      }
     }
 
     // Reset scroll ngang của container topic (nếu cần)
