@@ -1,6 +1,6 @@
-const { processOneVideo } = require('./processOneVideo');
 const path = require('path');
-const { loadVideoLinksFromFile } = require('./src/utils/crawler');
+const { loadVideoLinksFromFile } = require('../utils/crawler');
+const { processOneVideo } = require('./processOneVideo');
 
 /**
  * Xử lý toàn bộ danh sách video TikTok

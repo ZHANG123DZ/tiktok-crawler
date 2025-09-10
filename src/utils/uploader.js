@@ -17,6 +17,22 @@ async function uploadVideo(filePath) {
   }
 }
 
+async function uploadAudio(filePath) {
+  try {
+    const result = await cloudinary.uploader.upload(filePath, {
+      resource_type: 'video',
+      folder: 'tiktok-audio',
+      format: 'mp3',
+    });
+
+    console.log('🎵 Uploaded audio to Cloudinary:', result.secure_url);
+    return result.secure_url;
+  } catch (err) {
+    console.error('❌ Audio upload failed:', err);
+    return null;
+  }
+}
+
 async function uploadImageFromUrl(imageUrl) {
   try {
     const response = await axios({
@@ -53,4 +69,5 @@ async function uploadImageFromUrl(imageUrl) {
 module.exports = {
   uploadVideo,
   uploadImageFromUrl,
+  uploadAudio,
 };

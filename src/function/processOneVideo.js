@@ -1,11 +1,8 @@
 const path = require('path');
 const fs = require('fs');
-const { uploadImageFromUrl, uploadVideo } = require('./src/utils/uploader');
-const {
-  saveTiktokVideo,
-} = require('./src/services/saveTiktokVideo.service.js');
-const { downloadVideo } = require('./src/utils/downloader');
-
+const { uploadImageFromUrl, uploadVideo } = require('../utils/uploader.js');
+const { saveTiktokVideo } = require('../services/tiktok-video.service.js');
+const { downloadVideo } = require('../utils/downloader.js');
 /**
  * Xử lý upload và lưu DB cho 1 video TikTok
  * @param {string} video.description - mô tả video
@@ -51,6 +48,9 @@ async function processOneVideo(video, downloadPath) {
       description: video.description,
       thumbnail: thumbnailUrl,
       content: uploadedVideoUrl,
+      musicId: video.music.tiktokId,
+      tags: video.tags,
+      topics: video.topics,
     });
 
     console.log(`✅ Hoàn tất xử lý video ${video.tiktokId}`);
