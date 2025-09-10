@@ -7,9 +7,9 @@ const { processAllMusics } = require('./src/function/processAllMusics');
 const downloadPath = 'D:/tiktok-video';
 
 const crawlerVideoTiktok = async () => {
-  // await crawl(downloadPath);
-  // await processTags(downloadPath);
-  // await processTopics(downloadPath);
+  await crawl(downloadPath);
+  await processTags(downloadPath);
+  await processTopics(downloadPath);
   await processAllMusics(downloadPath);
   await processAllVideos(downloadPath);
   await deleteFolder(downloadPath);
