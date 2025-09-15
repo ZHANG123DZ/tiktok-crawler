@@ -25,6 +25,14 @@ class TagService {
 
     return tag;
   }
+
+  async getTag(slug) {
+    const data = await Tag.findOne({
+      where: { slug: slug },
+      attributes: ['id'],
+    });
+    return data;
+  }
 }
 
 module.exports = TagService;

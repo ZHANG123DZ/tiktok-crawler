@@ -1,12 +1,13 @@
 const path = require('path');
 const fs = require('fs');
 const { uploadImageFromUrl, uploadAudio } = require('../utils/uploader.js');
-const { saveTiktokMusic } = require('../services/tiktok-music.service.js');
 const { downloadAudio } = require('../utils/downloader.js');
+const userService = require('../services/user.service.js');
+const musicService = require('../services/music.service.js');
 /**
  * Xử lý upload và lưu DB cho 1 music TikTok
  * @param {string} music.thumbnail - URL ảnh thumbnail
- * @param {string} music.tiktokId - ID music TikTok
+ * @param {string} music.id - ID music TikTok
  * @param {string} downloadPath - Đường dẫn thư mục lưu file .mp4
  */
 async function processOneMusic(music, downloadPath) {
@@ -14,7 +15,7 @@ async function processOneMusic(music, downloadPath) {
     // 1. Download music về máy
     const musicFilePath = await downloadAudio(music.link, downloadPath);
     if (!musicFilePath) {
-      console.log(`❌ Không tải được music ${music.tiktokId}`);
+      console.log(`❌ Không tải được music ${music.id}`);
       return;
     }
 
@@ -37,23 +38,26 @@ async function processOneMusic(music, downloadPath) {
       return;
     }
 
+    const author = await userService.getUser(music.author);
     // 4. Lưu vào DB
-    await saveTiktokMusic({
-      tiktokId: music.tiktokId,
+    await musicService.createOrUpdate({
+      slug: music.id,
+      title: music?.title || '',
       audio: uploadedMusicUrl,
       thumbnail: thumbnailUrl,
+      authorId: author?.id || null,
     });
 
-    console.log(`✅ Hoàn tất xử lý music ${music.tiktokId}`);
+    console.log(`✅ Hoàn tất xử lý music ${music.id}`);
   } catch (err) {
-    console.error(`❌ Lỗi khi xử lý music ${music.tiktokId}:`, err.message);
+    console.error(`❌ Lỗi khi xử lý music ${music.id}:`, err.message);
   } finally {
     try {
       if (fs.existsSync(musicFilePath)) {
         fs.unlinkSync(musicFilePath);
       }
     } catch (e) {
-      console.warn(`⚠️ Không xoá được file tạm ${music.tiktokId}`);
+      console.warn(`⚠️ Không xoá được file tạm ${music.id}`);
     }
   }
 }

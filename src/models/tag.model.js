@@ -31,5 +31,16 @@ module.exports = (sequelize, DataTypes) => {
       updatedAt: 'updatedAt',
     }
   );
+  Tag.associate = (db) => {
+    Tag.hasMany(db.PostTag, {
+      foreignKey: 'tagId',
+      as: 'postTags',
+    });
+    Tag.belongsToMany(db.Post, {
+      through: db.PostTag,
+      foreignKey: 'tagId',
+      as: 'posts',
+    });
+  };
   return Tag;
 };

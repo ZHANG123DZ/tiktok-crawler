@@ -1,5 +1,15 @@
-const { Topic } = require('../models');
 const slugify = require('slugify');
+const { Op } = require('sequelize');
+const incrementField = require('../helper/incrementField');
+const {
+  Post,
+  Topic,
+  PostTopic,
+  PostTag,
+  Tag,
+  User,
+  Music,
+} = require('../models');
 
 class TopicService {
   /**

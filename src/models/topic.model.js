@@ -32,5 +32,16 @@ module.exports = (sequelize, DataTypes) => {
       deletedAt: 'deletedAt',
     }
   );
+  Topic.associate = (db) => {
+    Topic.hasMany(db.PostTopic, {
+      foreignKey: 'topicId',
+      as: 'postTopics',
+    });
+    Topic.belongsToMany(db.Post, {
+      through: db.PostTopic,
+      foreignKey: 'topicId',
+      as: 'posts',
+    });
+  };
   return Topic;
 };

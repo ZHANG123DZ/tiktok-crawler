@@ -1,7 +1,7 @@
 const path = require('path');
 const { loadDataFromFile } = require('../utils/crawler');
 const { processOneMusic } = require('./processOneMusic');
-
+const musicService = require('../services/music.service');
 /**
  * Xử lý toàn bộ danh sách music TikTok
  * @param {Array<Object>} musicList - Danh sách music object ({ url, tiktokId, thumbnail })
@@ -19,8 +19,9 @@ async function processAllMusics(downloadPath) {
   console.log(`📦 Bắt đầu xử lý ${musicList.length} music...`);
 
   for (const music of musicList) {
-    console.log(`\n📹 Đang xử lý music: ${music.tiktokId}`);
-    await processOneMusic(music, downloadPath);
+    console.log(`\n📹 Đang xử lý music: ${music.id}`);
+    const exits = await musicService.checkExists(music.id);
+    if (!exits) await processOneMusic(music, downloadPath);
   }
 
   console.log('\n✅ Đã xử lý xong toàn bộ music.');

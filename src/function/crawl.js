@@ -7,7 +7,8 @@ const crawl = async (downloadPath) => {
   const fileMusicPath = path.join(downloadPath, 'music-links.json');
   const fileTopicPath = path.join(downloadPath, 'topics.json');
   const fileTagPath = path.join(downloadPath, 'tags.json');
-  const { enrichedData, topicData, tagData, musicData } =
+  const fileUserPath = path.join(downloadPath, 'users.json');
+  const { enrichedData, topicData, tagData, musicData, userData } =
     await crawlTikTokVideoLinks();
   console.log(`🔗 Tìm thấy ${enrichedData.length} video.`);
 
@@ -18,6 +19,10 @@ const crawl = async (downloadPath) => {
   //Lưu tag info
   saveDataToFile(tagData, fileTagPath);
   console.log(`💾 Đã lưu vào: ${fileTagPath}`);
+
+  //Lưu topic info
+  saveDataToFile(userData, fileUserPath);
+  console.log(`💾 Đã lưu vào: ${fileUserPath}`);
 
   //Lưu music info
   saveDataToFile(musicData, fileMusicPath);

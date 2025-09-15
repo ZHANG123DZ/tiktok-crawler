@@ -5,9 +5,9 @@ const TopicService = require('../services/topic.service');
 async function processTopics(downloadPath) {
   const filePath = path.join(downloadPath, 'topics.json');
   const topicList = loadDataFromFile(filePath);
-  console.log(topicList);
+
   if (!Array.isArray(topicList) || topicList.length === 0) {
-    console.log('❌ Danh sách video rỗng.');
+    console.log('❌ Danh sách chủ đề rỗng.');
     return;
   }
 
@@ -17,7 +17,8 @@ async function processTopics(downloadPath) {
     console.log(`\n📹 Đang xử lý chủ đề: ${topic}`);
     await TopicService.createIfNotExists(topic);
   }
-  console.log('\n✅ Đã xử lý xong toàn bộ topic.');
+  console.log('\n✅ Đã xử lý xong toàn bộ chủ đề.');
+  return;
 }
 
 module.exports = {
