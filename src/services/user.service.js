@@ -1,4 +1,6 @@
+const { setupElasticUser } = require('../function/elasticSetup');
 const { User } = require('../models');
+const { uploadImageFromUrl } = require('../utils/uploader');
 
 class UsersService {
   async createOrUpdate(data) {
@@ -9,11 +11,23 @@ class UsersService {
     let user = await User.findOne({ where: { username: data.username } });
 
     if (user) {
-      await user.update(data); // cập nhật với dữ liệu mới
       return user;
     }
 
+    const avatarUrl = await uploadImageFromUrl(data.avatar);
+    if (!avatarUrl) {
+      console.log(`❌ Upload avatar thất bại: ${data.username}`);
+      return;
+    }
+    data.avatar = avatarUrl;
     user = await User.create(data);
+    const elasticUser = {
+      id: user.id,
+      username: user.username,
+      name: user.name,
+      bio: user.bio,
+    };
+    await setupElasticUser(elasticUser);
     return user;
   }
 

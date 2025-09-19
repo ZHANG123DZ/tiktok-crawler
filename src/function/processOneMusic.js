@@ -24,29 +24,9 @@ async function processOneMusic(music, downloadPath) {
       return;
     }
 
-    // 2. Upload thumbnail lên Cloudinary
-    const thumbnailUrl = await uploadImageFromUrl(music.thumbnail);
-    if (!thumbnailUrl) {
-      console.log(`❌ Upload thumbnail thất bại: ${music.tiktokId}`);
-      return;
-    }
-
-    // 3. Upload music lên Cloudinary
-    const uploadedMusicUrl = await uploadAudio(musicFilePath);
-    if (!uploadedMusicUrl) {
-      console.log(`❌ Upload music thất bại: ${music.tiktokId}`);
-      return;
-    }
-
     const author = await userService.getUser(music.author);
-    // 4. Lưu vào DB
-    await musicService.createOrUpdate({
-      slug: music.id,
-      title: music?.title || '',
-      audio: uploadedMusicUrl,
-      thumbnail: thumbnailUrl,
-      authorId: author?.id || null,
-    });
+    music.authorId = author?.id;
+    await musicService.createOrUpdate(music, musicFilePath);
 
     console.log(`✅ Hoàn tất xử lý music ${music.id}`);
   } catch (err) {

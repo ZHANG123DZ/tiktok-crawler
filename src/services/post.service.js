@@ -9,20 +9,59 @@ const {
   User,
   Music,
 } = require('../models');
+const { uploadVideo, uploadImageFromUrl } = require('../utils/uploader');
+const { setupElasticPost } = require('../function/elasticSetup');
 
 class PostsService {
-  async create(data) {
+  async createOrUpdate(dataPost, videoFilePath) {
+    const existingPost = await Post.findOne({
+      where: { slug: dataPost.tiktokId },
+    });
+    if (existingPost) {
+      // await existingPost.update(data);
+      return existingPost;
+    }
     //author
-    const author = data.author;
-    const user = await User.findOne({ where: { username: author.unique_id } });
+    const author = dataPost.author;
 
-    data.authorId = user.id;
-    data.authorName = user.name;
-    data.authorUserName = user.username;
-    data.authorAvatar = user.avatar;
+    const user = await User.findOne({ where: { username: author.unique_id } });
+    if (!user) {
+      console.log(`❌ Không tìm thấy user: ${author.unique_id}`);
+      return;
+    }
+    const data = {
+      slug: dataPost.tiktokId,
+      title: dataPost.title,
+      description: dataPost.description,
+      type: 'video',
+      status: 'public',
+      authorId: user.id,
+      authorName: user.name,
+      authorUserName: user.username,
+      authorAvatar: user.avatar,
+    };
+
     //Music
-    const music = await Music.findOne({ where: { slug: data?.musicId } });
+    const music = await Music.findOne({ where: { slug: dataPost?.music.id } });
     data.musicId = music?.id || null;
+
+    const thumbnailUrl = await uploadImageFromUrl(dataPost.thumbnail);
+    if (!thumbnailUrl) {
+      console.log(`❌ Upload thumbnail thất bại: ${data.slug}`);
+      return;
+    }
+
+    const uploadedVideoUrl = await uploadVideo(videoFilePath);
+    if (!uploadedVideoUrl) {
+      console.log(`❌ Upload video thất bại: ${data.slug}`);
+      return;
+    }
+    data.thumbnail = thumbnailUrl;
+    data.content = uploadedVideoUrl;
+    data.tags = dataPost.tags || [];
+    data.topics = dataPost.topics || [];
+    data.viewCount = Math.floor(Math.random() * 10000);
+
     const post = await Post.create(data);
     //Tag
     const tags = await Tag.findAll({
@@ -57,6 +96,17 @@ class PostsService {
     await incrementField(Topic, 'post_count', +1, {
       id: { [Op.in]: topicIds },
     });
+    const newPost = await Post.findOne({ where: { slug: data.slug } });
+    const elasticPost = {
+      id: newPost.id,
+      title: dataPost.title,
+      description: dataPost.description,
+      tags: data.tags,
+      topics: data.topics,
+      authorName: data.authorName,
+      authorUserName: data.authorUserName,
+    };
+    await setupElasticPost(elasticPost);
     return post;
   }
   async checkExits(slug) {

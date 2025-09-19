@@ -12,8 +12,8 @@ const crawlerVideoTiktok = async () => {
   // await processTags(downloadPath);
   // await processTopics(downloadPath);
   // await createUsers(downloadPath);
-  // await processAllMusics(downloadPath);
-  await processAllVideos(downloadPath);
+  await processAllMusics(downloadPath);
+  // await processAllVideos(downloadPath);
   // await deleteFolder(downloadPath);
 };
 

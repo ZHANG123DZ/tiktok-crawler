@@ -1,8 +1,5 @@
 const path = require('path');
-const {
-  loadVideoLinksFromFile,
-  loadDataFromFile,
-} = require('../utils/crawler');
+const { loadDataFromFile } = require('../utils/crawler');
 const { processOneVideo } = require('./processOneVideo');
 const postService = require('../services/post.service');
 
@@ -23,7 +20,6 @@ async function processAllVideos(downloadPath) {
   console.log(`📦 Bắt đầu xử lý ${videoList.length} video...`);
 
   for (const video of videoList) {
-    // const exits = await postService.checkExits(video.tiktokId);
     if (true) {
       await processOneVideo(video, downloadPath);
     }

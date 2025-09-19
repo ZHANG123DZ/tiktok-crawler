@@ -13,7 +13,7 @@ const NAV_TIMEOUT = 15000;
 const API_TIMEOUT = 15000;
 const VIDEO_API_RETRIES = 2;
 const TOPIC_CLICK_RETRIES = 3;
-const SCROLL_TIMES = 2;
+const SCROLL_TIMES = 5;
 const SLEEP_BETWEEN_VIDEOS = 2000;
 
 // ---------- helpers ----------

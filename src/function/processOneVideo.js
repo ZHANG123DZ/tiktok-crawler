@@ -25,32 +25,8 @@ async function processOneVideo(video, downloadPath) {
       console.error('❌ File không tồn tại:', videoFilePath);
       return;
     }
-    // 2. Upload thumbnail lên Cloudinary
-    const thumbnailUrl = await uploadImageFromUrl(video.thumbnail);
-    if (!thumbnailUrl) {
-      console.log(`❌ Upload thumbnail thất bại: ${video.tiktokId}`);
-      return;
-    }
-    // 3. Upload video lên Cloudinary
-    const uploadedVideoUrl = await uploadVideo(videoFilePath);
-    if (!uploadedVideoUrl) {
-      console.log(`❌ Upload video thất bại: ${video.tiktokId}`);
-      return;
-    }
-    const data = {
-      slug: video.tiktokId,
-      title: video.title,
-      type: 'video',
-      status: 'public',
-      description: video.description,
-      thumbnail: thumbnailUrl,
-      content: uploadedVideoUrl,
-      musicId: video.music.id || null,
-      tags: video.tags,
-      topics: video.topics,
-      author: video.author,
-    };
-    await postService.create(data);
+
+    await postService.createOrUpdate(video, videoFilePath);
     console.log(`✅ Hoàn tất xử lý video ${video.tiktokId}`);
   } catch (err) {
     console.error(`❌ Lỗi khi xử lý video ${video.tiktokId}:`, err.message);
